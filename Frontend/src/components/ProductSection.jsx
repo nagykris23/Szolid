@@ -23,7 +23,7 @@ export default function ProductSection() {
 
   return (
     <section className="product-section">
-      <h3>NOI PARFUMOK</h3>
+      <h3>NŐI PARFUMOK</h3>
       <div className="product-grid">
         {products.map((product) => (
           <ProductCard
