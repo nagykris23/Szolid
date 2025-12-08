@@ -1,0 +1,38 @@
+
+
+.product-section {
+  text-align: center;
+  padding: 120px 60px;
+  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+}
+
+.product-section h3 {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  margin-bottom: 70px;
+  color: #2c2c2c;
+  position: relative;
+  display: inline-block;
+}
+
+.product-section h3::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #8ab68e 0%, #6a8d6e 100%);
+  border-radius: 2px;
+}
+
+.product-grid {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+  max-width: 1300px;
+  margin: 0 auto;
+}
