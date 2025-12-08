@@ -24,7 +24,6 @@ export default function Navigation() {
           <img src={user} alt="felhasználó" className="img" />
           <img src={search} alt="keresés" className="img" />
           <img src={cart} alt="kosár" className="img" />
-
           <button
             type="button"
             className="login-btn"

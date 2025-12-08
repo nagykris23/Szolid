@@ -5,19 +5,19 @@ export default function ProductSection() {
   const products = [
     {
       name: "ANGEL",
-      image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=300&h=300&fit=crop"
+      image:"https://www.oxiessence.eu/img/97934/angel/264x264,r/angel.jpg?time=1715778874"
     },
     {
       name: "LOVE",
-      image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=300&h=300&fit=crop"
+      image: "https://www.oxiessence.eu/img/97934/love/264x264,r/love.jpg?time=1715778482"
     },
     {
       name: "OPIUM",
-      image: "https://images.unsplash.com/photo-1587017539504-67cfbddac569?w=300&h=300&fit=crop"
+      image: "https://www.oxiessence.eu/img/97934/opium/264x264,r/opium.jpg?time=1715777539"
     },
     {
       name: "PARIS",
-      image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=300&h=300&fit=crop"
+      image: "https://www.oxiessence.eu/img/97934/paris/264x264,r/paris.jpg?time=1715778931"
     }
   ];
 
