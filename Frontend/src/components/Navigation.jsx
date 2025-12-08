@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
 import "./Navigation.css";
-
+import user from "../assets/user.png";
+import search from "../assets/search.png";
+import cart from "../assets/cart.png";
 
 export default function Navigation() {
   const loginRef = useRef(null);
@@ -19,9 +21,10 @@ export default function Navigation() {
         </nav>
 
         <div className="nav-icons">
-          <span>🎅</span>
-          <span>🔍</span>
-          <span>🛒</span>
+          <img src={user} alt="felhasználó" className="img" />
+          <img src={search} alt="keresés" className="img" />
+          <img src={cart} alt="kosár" className="img" />
+
           <button
             type="button"
             className="login-btn"
@@ -32,7 +35,7 @@ export default function Navigation() {
         </div>
       </header>
 
-      
+
     </>
   );
 }
