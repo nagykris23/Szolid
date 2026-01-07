@@ -1,0 +1,83 @@
+.parfumok-full-page {
+    width: 100%;
+    padding-top: 20px;
+}
+
+.category-header {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 60px 0;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.parfumok-content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 40px;
+}
+
+.breadcrumb {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 30px;
+}
+
+.parfumok-layout {
+    display: flex;
+    gap: 60px;
+}
+
+.filters-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+}
+
+.filter-block {
+    margin-bottom: 40px;
+}
+
+.filter-block h3 {
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: 1.5px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.products-container {
+    flex: 1;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 40px;
+}
+
+.price-slider {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.price-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #666;
+}

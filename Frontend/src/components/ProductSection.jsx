@@ -4,19 +4,27 @@ import "./ProductSection.css"
 export default function ProductSection() {
   const products = [
     {
+      id: 1,
       name: "ANGEL",
-      image:"https://www.oxiessence.eu/img/97934/angel/264x264,r/angel.jpg?time=1715778874"
+      price: "4500 FT",
+      image: "https://www.oxiessence.eu/img/97934/angel/264x264,r/angel.jpg?time=1715778874"
     },
     {
+      id: 2,
       name: "LOVE",
+      price: "4500 FT",
       image: "https://www.oxiessence.eu/img/97934/love/264x264,r/love.jpg?time=1715778482"
     },
     {
+      id: 3,
       name: "OPIUM",
+      price: "4500 FT",
       image: "https://www.oxiessence.eu/img/97934/opium/264x264,r/opium.jpg?time=1715777539"
     },
     {
+      id: 4,
       name: "PARIS",
+      price: "4500 FT",
       image: "https://www.oxiessence.eu/img/97934/paris/264x264,r/paris.jpg?time=1715778931"
     }
   ];
@@ -27,9 +35,11 @@ export default function ProductSection() {
       <div className="product-grid">
         {products.map((product) => (
           <ProductCard
-            key={product.name}
+            key={product.id}
+            id={product.id}
             name={product.name}
             image={product.image}
+            price={product.price}
           />
         ))}
       </div>
