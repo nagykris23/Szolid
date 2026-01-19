@@ -4,7 +4,10 @@ import "./ProductCard.css";
 export default function ProductCard({ id, name, image, price }) {
   return (
     <div className="product-card">
-      <Link to={`/termek/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Link
+        to={`/termek/${id}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
         <div className="img-holder">
           <div
             className="circle-img"
