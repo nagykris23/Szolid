@@ -28,6 +28,9 @@ CREATE TABLE USERS (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+/*
+JELSZO: password
+*/
 INSERT INTO USERS (name, email, password_hash, role) VALUES
 ('Admin User', 'admin@example.com', '$2a$10$GGWOS0dbLV8dfCBjKsP6ruzG04.kOsV75h2sygFH/.auzJ4ujT65K', 'admin'),
 ('Teszt User', 'user@example.com', '$2a$10$GGWOS0dbLV8dfCBjKsP6ruzG04.kOsV75h2sygFH/.auzJ4ujT65K', 'user');
