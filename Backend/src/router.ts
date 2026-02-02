@@ -1,23 +1,26 @@
 import { Router } from "express";
 import { requireAuth, AuthRequest } from "./middleware/auth.middleware";
+import { requireAdmin } from "./middleware/admin.middleware";
 import { run, getAllData, getDataById, postData, deleteDataById, putDataById, patchDataById } from "./controller";
 import { login, register } from "./User/auth.controller";
 
 const router = Router();
 
+const adminRouter = Router();
+adminRouter.use(requireAuth, requireAdmin);
+
 router.get("/health", run);
 
-router.get("/products", getAllData);
-router.get("/products/:id", getDataById);
+router.get("/products", requireAuth, getAllData);
+router.get("/products/:id", requireAuth, getDataById);
 
 router.post("/register", register);
 router.post("/login", login);
 
-router.post("/admin/products", postData);
-router.delete("/admin/products/:id", deleteDataById);
-router.put("/admin/products/:id", putDataById);
-router.patch("/admin/products/:id", patchDataById);
-
+adminRouter.post("/products", postData);
+adminRouter.delete("/products/:id", deleteDataById);
+adminRouter.put("/products/:id", putDataById);
+adminRouter.patch("/products/:id", patchDataById);
 
 //token teszt
 router.get("/auth/me", requireAuth, (req: AuthRequest, res) => {

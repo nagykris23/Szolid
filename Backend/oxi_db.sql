@@ -47,8 +47,8 @@ CREATE TABLE USERS (
 JELSZO: password
 */
 INSERT INTO USERS (name, email, password_hash, role) VALUES
-('Admin User', 'admin@example.com', '$2a$10$GGWOS0dbLV8dfCBjKsP6ruzG04.kOsV75h2sygFH/.auzJ4ujT65K', 'admin'),
-('Teszt User', 'user@example.com', '$2a$10$GGWOS0dbLV8dfCBjKsP6ruzG04.kOsV75h2sygFH/.auzJ4ujT65K', 'user');
+('Admin User', 'admin@oxiessence.com', '$2a$10$GGWOS0dbLV8dfCBjKsP6ruzG04.kOsV75h2sygFH/.auzJ4ujT65K', 'admin'),
+('Teszt User', 'teszt@oxiessence.com', '$2a$10$GGWOS0dbLV8dfCBjKsP6ruzG04.kOsV75h2sygFH/.auzJ4ujT65K', 'user');
 
 
 SELECT user_id, email, password_hash, LENGTH(password_hash) AS len
