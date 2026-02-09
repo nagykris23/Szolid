@@ -81,3 +81,11 @@
     font-size: 12px;
     color: #666;
 }
+.filter-current-price {
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.filter-current-price .price-value {
+    font-weight: bold;
+}

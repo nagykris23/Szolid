@@ -4,11 +4,24 @@ import { products } from "../data";
 import "./Parfumok.css";
 
 export default function Parfumok() {
-  const [price, setPrice] = useState(3000);
+  const [price, setPrice] = useState(12000);
+  const [ferfi, setFerfi] = useState(false);
+  const [noi, setNoi] = useState(false);
 
   const handlePriceChange = (event) => {
-    setPrice(event.target.value);
+    setPrice(Number(event.target.value));
   };
+
+  const filteredProducts = products.filter((p) => {
+    const priceMatch = p.price <= price;
+
+    const categoryMatch =
+      (!ferfi && !noi) ||
+      (ferfi && p.category === "ferfi") ||
+      (noi && p.category === "noi");
+
+    return priceMatch && categoryMatch;
+  });
 
   return (
     <div className="parfumok-full-page">
@@ -26,18 +39,29 @@ export default function Parfumok() {
           <aside className="filters-sidebar">
             <div className="filter-block">
               <h3>KATEGÓRIÁK</h3>
+
               <div className="filter-item">
-                <input type="checkbox" id="f" />
-                <label htmlFor="f">Férfiaknak</label>
+                <input
+                  type="checkbox"
+                  checked={ferfi}
+                  onChange={(e) => setFerfi(e.target.checked)}
+                />
+                <label>Férfiaknak</label>
               </div>
+
               <div className="filter-item">
-                <input type="checkbox" id="n" />
-                <label htmlFor="n">Nőknek</label>
+                <input
+                  type="checkbox"
+                  checked={noi}
+                  onChange={(e) => setNoi(e.target.checked)}
+                />
+                <label>Nőknek</label>
               </div>
             </div>
 
             <div className="filter-block">
               <h3>ÁR SZERINT</h3>
+
               <div className="price-slider-container">
                 <input
                   type="range"
@@ -47,11 +71,13 @@ export default function Parfumok() {
                   value={price}
                   onChange={handlePriceChange}
                 />
+
                 <div className="price-labels">
                   <span>3 000 Ft</span>
                   <span>12 000 Ft</span>
                 </div>
-                <div className="current-price">
+
+                <div className="filter-current-price">
                   <span>Jelenlegi ár:</span>
                   <span className="price-value">{price} Ft</span>
                 </div>
@@ -61,7 +87,7 @@ export default function Parfumok() {
 
           <main className="products-container">
             <div className="products-grid">
-              {products.map((p) => (
+              {filteredProducts.map((p) => (
                 <ProductCard
                   key={p.id}
                   id={p.id}
