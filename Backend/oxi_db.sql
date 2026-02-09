@@ -15,7 +15,7 @@ CREATE TABLE PRODUCTS (
 );
 
 INSERT INTO PRODUCTS (name, description, category, price, stock_quantity, image_url) VALUES
-('The Man 01', 'Fás-fűszeres, kissé orientális, napsütötte bőrös illat, ami csakis olyan férfinak áll jól, aki szereti a kalandot, nem fél kockáztatni, megragad minden lehetőséget.', 'parfum', 4500, 10, 'the-man-01.jpg')
+('The Man 01', 'Fás-fűszeres, kissé orientális, napsütötte bőrös illat, ami csakis olyan férfinak áll jól, aki szereti a kalandot, nem fél kockáztatni, megragad minden lehetőséget.', 'parfum', 4500, 10, 'the-man-01.jpg'),
 ('The Man 02', ' Friss, tiszta, bizsergően csábító, vizes, fougere illat. A férfié, aki most lépett ki a zuhany alól. Főként a tölgymoha és a levendula aromáit egyesíti.', 'parfum', 4500, 10, 'the-man-02.jpg'),
 ('The Man 03', 'Dohány-vanilia, orientális-fűszeres. Izgalmas, erőteljes aromája a hatalom és magabiztosság érzésével ruház fel. Klasszikus, nagyon férfias illat.', 'parfum', 4500, 10, 'the-man-03.jpg'),
 ('The Man 04', 'Aromás, friss, vizes, bársonyosan fás alapon. Az illat nagyon energikus, magával ragadó! Erő, dinamizmus, népszerűség. A győztes, sikeres, mindenre elszánt, célorientált hős illata!', 'parfum', 4500, 10, 'the-man-04.jpg'),

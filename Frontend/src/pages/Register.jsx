@@ -7,8 +7,13 @@ import "./Register.css";
 export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+
   const [email, setEmail] = useState("");
+  const [emailConfirm, setEmailConfirm] = useState("");
+
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+
   const [error, setError] = useState("");
 
   const { login } = useAuth();
@@ -17,6 +22,17 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    // ellenőrzések
+    if (email !== emailConfirm) {
+      setError("Az email címek nem egyeznek!");
+      return;
+    }
+
+    if (password !== passwordConfirm) {
+      setError("A jelszavak nem egyeznek!");
+      return;
+    }
 
     try {
       const fullName = `${firstName} ${lastName}`;
@@ -56,10 +72,26 @@ export default function Register() {
         />
 
         <input
+          type="email"
+          placeholder="Email újra"
+          value={emailConfirm}
+          onChange={(e) => setEmailConfirm(e.target.value)}
+          required
+        />
+
+        <input
           type="password"
           placeholder="Jelszó"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <input
+          type="password"
+          placeholder="Jelszó újra"
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
           required
         />
 

@@ -32,6 +32,7 @@
   .register-grid {
     grid-template-columns: 1fr;
   }
+
   .full {
     grid-column: span 1;
   }
