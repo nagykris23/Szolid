@@ -1,5 +1,13 @@
 import pool from "../wrapper";
-import { User } from "../model";
+
+export type User = {
+  user_id: number;
+  name: string;
+  email: string;
+  password_hash: string;
+  role: string;
+  created_at?: string;
+};
 
 export const findUserByEmail = async (email: string): Promise<User | null> => {
   const [rows] = await pool.query(
