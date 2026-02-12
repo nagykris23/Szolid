@@ -1,4 +1,4 @@
-import "./Hero.css";
+﻿import "./Hero.css";
 import { Link } from "react-router-dom";
 
 export default function Hero() {

@@ -6,18 +6,42 @@ import ProductDetails from "./pages/ProductDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { AuthProvider } from "./context/AuthContext";
+import { CartProvider } from "./context/CartContext";
+import Basket from "./pages/Basket";
+import Checkout from "./pages/Checkout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Toast from "./components/Toast";
 
 function App() {
   return (
     <AuthProvider>
-      <Navigation />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/parfumok" element={<Parfumok />} />
-        <Route path="/termek/:id" element={<ProductDetails />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
+      <CartProvider>
+        <Navigation />
+        <Toast />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/parfumok" element={<Parfumok />} />
+          <Route path="/termek/:id" element={<ProductDetails />} />
+          <Route
+            path="/kosar"
+            element={
+              <ProtectedRoute>
+                <Basket />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/fizetes"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </CartProvider>
     </AuthProvider>
   );
 }
