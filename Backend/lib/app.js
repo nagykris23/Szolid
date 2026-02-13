@@ -5,11 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
-var router_1 = __importDefault(require("./router"));
-var router_2 = __importDefault(require("./router"));
+var product_router_1 = __importDefault(require("./Product/product.router"));
+var user_router_1 = __importDefault(require("./User/user.router"));
+var product_controller_1 = require("./Product/product.controller");
 var app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.use("/auth", router_2.default);
-app.use("/api", router_1.default);
+app.get("/health", product_controller_1.run);
+app.use("/auth", user_router_1.default);
+app.use("/api/products", product_router_1.default);
 exports.default = app;
