@@ -22,8 +22,6 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    // ellenőrzések
     if (email !== emailConfirm) {
       setError("Az email címek nem egyeznek!");
       return;
@@ -104,3 +102,4 @@ export default function Register() {
     </div>
   );
 }
+
