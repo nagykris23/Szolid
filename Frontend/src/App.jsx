@@ -12,6 +12,9 @@ import Basket from "./pages/Basket";
 import Checkout from "./pages/Checkout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Toast from "./components/Toast";
+import Rolunk from "./pages/Rolunk";
+import Kollekcio from "./pages/Kollekcio";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -24,6 +27,8 @@ function App() {
           <Route path="/parfumok" element={<Parfumok />} />
           <Route path="/dezodorok" element={<Dezodorok />} />
           <Route path="/termek/:id" element={<ProductDetails />} />
+          <Route path="/kollekciok" element={<Kollekcio />} />
+          <Route path="/rolunk" element={<Rolunk />} />
           <Route
             path="/kosar"
             element={
@@ -39,6 +44,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Checkout />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
               </ProtectedRoute>
             }
           />

@@ -10,6 +10,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/images", express.static("src/assets"));
 
 app.get("/health", run);
 

@@ -81,6 +81,7 @@
     font-size: 12px;
     color: #666;
 }
+
 .filter-current-price {
     font-size: 14px;
     margin-top: 8px;
@@ -89,3 +90,12 @@
 .filter-current-price .price-value {
     font-weight: bold;
 }
+
+.loading-message, .error-message, .no-results {
+    padding: 40px;
+    text-align: center;
+    color: #888;
+    font-size: 15px;
+}
+
+.error-message { color: #ef4444; }

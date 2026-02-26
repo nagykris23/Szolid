@@ -3,11 +3,17 @@ import ProductCard from "../components/ProductCard";
 import { getProductsByCategory } from "../api/products";
 import "./Parfumok.css";
 
+const IMAGE_BASE_URL = "http://localhost:3000/images/";
+function getImageUrl(imageUrl) {
+  if (!imageUrl) return "https://via.placeholder.com/264x264?text=Nincs+kép";
+  if (imageUrl.startsWith("http")) return imageUrl;
+  return `${IMAGE_BASE_URL}${imageUrl}`;
+}
+
 export default function Dezodorok() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [price, setPrice] = useState(12000);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,12 +31,6 @@ export default function Dezodorok() {
     fetchProducts();
   }, []);
 
-  const handlePriceChange = (event) => {
-    setPrice(Number(event.target.value));
-  };
-
-  const filteredProducts = products.filter((p) => p.price <= price);
-
   return (
     <div className="parfumok-full-page">
       <section className="category-header">
@@ -43,56 +43,24 @@ export default function Dezodorok() {
       <div className="parfumok-content-wrapper">
         <div className="breadcrumb">🏠 / Dezodorok</div>
 
-        <div className="parfumok-layout">
-          <aside className="filters-sidebar">
-            <div className="filter-block">
-              <h3>ÁR SZERINT</h3>
-
-              <div className="price-slider-container">
-                <input
-                  type="range"
-                  min="1000"
-                  max="12000"
-                  className="price-slider"
-                  value={price}
-                  onChange={handlePriceChange}
+        <main className="products-container">
+          {loading && <p className="loading-message">Betöltés...</p>}
+          {error && <p className="error-message">{error}</p>}
+          {!loading && !error && (
+            <div className="products-grid">
+              {products.map((p) => (
+                <ProductCard
+                  key={p.product_id}
+                  id={p.product_id}
+                  name={p.name}
+                  price={p.price}
+                  image={getImageUrl(p.image_url)}
+                  description={p.description}
                 />
-
-                <div className="price-labels">
-                  <span>1 000 Ft</span>
-                  <span>12 000 Ft</span>
-                </div>
-
-                <div className="filter-current-price">
-                  <span>Jelenlegi ár:</span>
-                  <span className="price-value">{price} Ft</span>
-                </div>
-              </div>
+              ))}
             </div>
-          </aside>
-
-          <main className="products-container">
-            {loading && <p className="loading-message">Betöltés...</p>}
-            {error && <p className="error-message">{error}</p>}
-            {!loading && !error && filteredProducts.length === 0 && (
-              <p className="no-results">Nincs találat a megadott feltételekre.</p>
-            )}
-            {!loading && !error && filteredProducts.length > 0 && (
-              <div className="products-grid">
-                {filteredProducts.map((p) => (
-                  <ProductCard
-                    key={p.product_id}
-                    id={p.product_id}
-                    name={p.name}
-                    price={p.price}
-                    image={p.image_url}
-                    description={p.description}
-                  />
-                ))}
-              </div>
-            )}
-          </main>
-        </div>
+          )}
+        </main>
       </div>
     </div>
   );

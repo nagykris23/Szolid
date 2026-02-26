@@ -1,7 +1,6 @@
-﻿import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navigation.css";
-import userIcon from "../assets/user.png";
-import search from "../assets/search.png";
+
 import cart from "../assets/cart.png";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -15,7 +14,7 @@ export default function Navigation() {
 
   return (
     <header className="navigation">
-      <div className="logo">PARFUMOK</div>
+      <div className="logo">OXI ESSENCE</div>
 
       <nav className="nav-links">
         <Link to="/">FŐOLDAL</Link>
@@ -23,11 +22,12 @@ export default function Navigation() {
         <Link to="/dezodorok">DEZODOROK</Link>
         <Link to="/kollekciok">KOLLEKCIÓK</Link>
         <Link to="/rolunk">RÓLUNK</Link>
+        {user?.role === "admin" && (
+          <Link to="/admin" style={{ color: "#d4b896" }}>ADMIN</Link>
+        )}
       </nav>
 
       <div className="nav-icons">
-        <img src={userIcon} alt="felhasználó" className="img" />
-        <img src={search} alt="keresés" className="img" />
         <button
           type="button"
           className="icon-btn"
@@ -39,37 +39,13 @@ export default function Navigation() {
 
         {!user ? (
           <>
-            <button
-              type="button"
-              className="login-btn"
-              onClick={() => navigate("/login")}
-            >
-              BEJELENTKEZÉS
-            </button>
-
-            <button
-              type="button"
-              className="login-btn"
-              onClick={() => navigate("/register")}
-            >
-              REGISZTRÁCIÓ
-            </button>
+            <button type="button" className="login-btn" onClick={() => navigate("/login")}>BEJELENTKEZÉS</button>
+            <button type="button" className="login-btn" onClick={() => navigate("/register")}>REGISZTRÁCIÓ</button>
           </>
         ) : (
           <>
-            <span style={{ color: "white", marginRight: "10px" }}>
-              {user.name}
-            </span>
-            <button
-              type="button"
-              className="login-btn"
-              onClick={() => {
-                logout();
-                navigate("/");
-              }}
-            >
-              KIJELENTKEZÉS
-            </button>
+            <span style={{ color: "white", marginRight: "10px" }}>{user.name}</span>
+            <button type="button" className="login-btn" onClick={() => { logout(); navigate("/"); }}>KIJELENTKEZÉS</button>
           </>
         )}
       </div>

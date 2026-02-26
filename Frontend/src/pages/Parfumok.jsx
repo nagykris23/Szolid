@@ -3,6 +3,13 @@ import ProductCard from "../components/ProductCard";
 import { getProductsByCategory } from "../api/products";
 import "./Parfumok.css";
 
+const IMAGE_BASE_URL = "http://localhost:3000/images/";
+function getImageUrl(imageUrl) {
+  if (!imageUrl) return "https://via.placeholder.com/264x264?text=Nincs+kép";
+  if (imageUrl.startsWith("http")) return imageUrl;
+  return `${IMAGE_BASE_URL}${imageUrl}`;
+}
+
 export default function Parfumok() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +23,7 @@ export default function Parfumok() {
       try {
         setLoading(true);
         setError(null);
-        const data = await getProductsByCategory("parfüm");
+        const data = await getProductsByCategory("parfum");
         setProducts(data);
       } catch (err) {
         setError("Nem sikerült betölteni a termékeket. Kérjük, próbálja újra később.");
@@ -35,7 +42,7 @@ export default function Parfumok() {
     const priceMatch = p.price <= price;
     const isFerfi = p.name?.toLowerCase().includes("man") || p.name?.toLowerCase().includes("férfi");
     const isNoi = !isFerfi;
-    
+
     const genderMatch =
       (!ferfi && !noi) ||
       (ferfi && isFerfi) ||
@@ -60,7 +67,6 @@ export default function Parfumok() {
           <aside className="filters-sidebar">
             <div className="filter-block">
               <h3>KATEGÓRIÁK</h3>
-
               <div className="filter-item">
                 <input
                   type="checkbox"
@@ -69,7 +75,6 @@ export default function Parfumok() {
                 />
                 <label>Férfiaknak</label>
               </div>
-
               <div className="filter-item">
                 <input
                   type="checkbox"
@@ -82,7 +87,6 @@ export default function Parfumok() {
 
             <div className="filter-block">
               <h3>ÁR SZERINT</h3>
-
               <div className="price-slider-container">
                 <input
                   type="range"
@@ -92,15 +96,13 @@ export default function Parfumok() {
                   value={price}
                   onChange={handlePriceChange}
                 />
-
                 <div className="price-labels">
                   <span>3 000 Ft</span>
                   <span>12 000 Ft</span>
                 </div>
-
                 <div className="filter-current-price">
                   <span>Jelenlegi ár:</span>
-                  <span className="price-value">{price} Ft</span>
+                  <span className="price-value"> {price.toLocaleString("hu-HU")} Ft</span>
                 </div>
               </div>
             </div>
@@ -120,7 +122,7 @@ export default function Parfumok() {
                     id={p.product_id}
                     name={p.name}
                     price={p.price}
-                    image={p.image_url}
+                    image={getImageUrl(p.image_url)}
                     description={p.description}
                   />
                 ))}
@@ -132,4 +134,3 @@ export default function Parfumok() {
     </div>
   );
 }
-

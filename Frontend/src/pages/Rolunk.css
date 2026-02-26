@@ -1,0 +1,82 @@
+.rolunk-page {
+  min-height: 100vh;
+  background: #fafaf8;
+  font-family: Georgia, serif;
+}
+
+
+.rolunk-hero {
+  position: relative;
+  height: 45vh;
+  min-height: 300px;
+  background: url('https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?w=1600&q=80') center/cover no-repeat;
+  display: flex; align-items: center; justify-content: center;
+}
+.rolunk-hero-overlay { position: absolute; inset: 0; background: rgba(10,8,6,0.6); }
+.rolunk-hero-content { position: relative; text-align: center; color: #fff; padding: 0 20px; }
+.rolunk-eyebrow {
+  display: block; font-size: 12px; letter-spacing: 4px;
+  text-transform: uppercase; color: #d4b896; margin-bottom: 12px; font-family: sans-serif;
+}
+.rolunk-hero-content h1 {
+  font-size: clamp(44px, 8vw, 80px); font-weight: 400; font-style: italic; margin: 0;
+}
+
+
+.rolunk-body { padding: 80px 40px; background: #fff; }
+.rolunk-body-inner { max-width: 720px; margin: 0 auto; }
+.rolunk-lead {
+  font-size: 22px; font-style: italic; color: #1a1a1a;
+  line-height: 1.6; margin-bottom: 28px;
+}
+.rolunk-body-inner p {
+  font-size: 16px; color: #555; line-height: 1.85;
+  margin-bottom: 18px; font-family: sans-serif;
+}
+
+
+.rolunk-team { padding: 80px 40px; background: #f9f6f1; }
+.rolunk-team-inner { max-width: 600px; margin: 0 auto; text-align: center; }
+.rolunk-team-inner h2 {
+  font-size: 32px; font-weight: 400; font-style: italic;
+  margin: 0 0 48px; color: #1a1a1a;
+}
+.team-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+}
+.team-card { text-align: center; }
+.team-avatar {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: #1a1a1a; color: #d4b896;
+  font-size: 22px; font-weight: 700; font-family: sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+}
+.team-card h3 { font-size: 17px; margin: 0 0 4px; color: #1a1a1a; font-family: sans-serif; font-weight: 600; }
+.team-card span { font-size: 13px; color: #8b7355; letter-spacing: 0.5px; font-family: sans-serif; }
+
+.rolunk-cta {
+  padding: 80px 40px; background: #1a1a1a; text-align: center;
+}
+.rolunk-cta h2 {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 400;
+  font-style: italic; color: #fff; margin: 0 0 36px;
+}
+.rolunk-cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.rolunk-btn-primary {
+  padding: 13px 34px; background: #d4b896; color: #1a1a1a;
+  text-decoration: none; font-size: 12px; letter-spacing: 3px;
+  font-weight: 700; font-family: sans-serif; transition: background 0.3s;
+}
+.rolunk-btn-primary:hover { background: #c4a07a; }
+.rolunk-btn-secondary {
+  padding: 13px 34px; border: 1px solid rgba(255,255,255,0.35);
+  color: #fff; text-decoration: none; font-size: 12px;
+  letter-spacing: 3px; font-weight: 700; font-family: sans-serif; transition: border-color 0.3s;
+}
+.rolunk-btn-secondary:hover { border-color: #d4b896; color: #d4b896; }
+
+@media (max-width: 600px) {
+  .rolunk-body, .rolunk-team, .rolunk-cta { padding: 60px 20px; }
+  .team-grid { grid-template-columns: 1fr; }
+}
