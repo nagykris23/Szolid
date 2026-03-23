@@ -132,22 +132,25 @@ var createCategory = function (req, res) { return __awaiter(void 0, void 0, void
 }); };
 exports.createCategory = createCategory;
 var updateCategory = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, name, err_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var id, name, _a, result, err_4;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
+                _b.trys.push([0, 2, , 3]);
                 id = Number(req.params.id);
                 name = req.body.name;
                 if (!name)
                     return [2 /*return*/, res.status(400).json({ message: "Név megadása kötelező" })];
                 return [4 /*yield*/, wrapper_1.default.query("UPDATE CATEGORIES SET name = ? WHERE category_id = ?", [name, id])];
             case 1:
-                _a.sent();
+                _a = __read.apply(void 0, [_b.sent(), 1]), result = _a[0];
+                if (result.affectedRows === 0) {
+                    return [2 /*return*/, res.status(404).json({ message: "Kategória nem található" })];
+                }
                 res.json({ category_id: id, name: name });
                 return [3 /*break*/, 3];
             case 2:
-                err_4 = _a.sent();
+                err_4 = _b.sent();
                 if ((err_4 === null || err_4 === void 0 ? void 0 : err_4.code) === "ER_DUP_ENTRY") {
                     return [2 /*return*/, res.status(400).json({ message: "Ez a kategória név már foglalt" })];
                 }

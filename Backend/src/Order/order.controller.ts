@@ -74,17 +74,15 @@ export const createOrder = async (req: AuthRequest, res: Response) => {
         const user_id = req.user?.user_id;
         if (!user_id) return res.status(401).json({ message: "Bejelentkezés szükséges" });
 
-        const { address_id, total_amount, shipping_method, payment_method, items } = req.body;
-
+        const { address_id, total_amount, shipping_method, payment_method, payment_status, items } = req.body;
         if (!items || !Array.isArray(items) || items.length === 0) {
             return res.status(400).json({ message: "A rendelésnek tartalmaznia kell termékeket" });
         }
 
         const [orderResult]: any = await connection.query(
-            "INSERT INTO ORDERS (user_id, address_id, total_amount, shipping_method, payment_method) VALUES (?, ?, ?, ?, ?)",
-            [user_id, address_id || null, total_amount, shipping_method || null, payment_method || null]
+            "INSERT INTO ORDERS (user_id, address_id, total_amount, shipping_method, payment_method, payment_status) VALUES (?, ?, ?, ?, ?, ?)",
+            [user_id, address_id || null, total_amount, shipping_method || null, payment_method || null, payment_status || 'unpaid']
         );
-
         const orderId = orderResult.insertId;
 
         for (const item of items) {
@@ -131,7 +129,7 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
         if (!status) return res.status(400).json({ message: "Státusz megadása kötelező" });
 
         const [result]: any = await pool.query("UPDATE ORDERS SET status = ? WHERE order_id = ?", [status, id]);
-        
+
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Rendelés nem található" });
         }
