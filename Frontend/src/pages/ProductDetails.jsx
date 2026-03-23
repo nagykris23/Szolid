@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProductById } from "../api/products";
+import { useCart } from "../context/CartContext";
 import "./ProductDetails.css";
 
 const IMAGE_BASE_URL = "http://localhost:3000/images/";
@@ -15,9 +16,11 @@ function getImageUrl(imageUrl) {
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addItem, showNotification } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     const productId = Number(id);
@@ -34,6 +37,7 @@ export default function ProductDetails() {
         setError(null);
         const data = await getProductById(productId);
         setProduct(data);
+        setSelectedImage(getImageUrl(data.image_url));
       } catch {
         setError("A termek betoltese sikertelen.");
       } finally {
@@ -57,6 +61,17 @@ export default function ProductDetails() {
   }
 
   const imageUrl = getImageUrl(product.image_url);
+  const thumbnails = [imageUrl, imageUrl];
+
+  const handleAddToCart = () => {
+    addItem({
+      id: product.product_id,
+      name: product.name,
+      price: product.price,
+      image: getImageUrl(product.image_url),
+    });
+    showNotification(`${product.name} hozzáadva a kosárhoz!`);
+  };
 
   return (
     <div className="product-page-wrapper">
@@ -68,12 +83,23 @@ export default function ProductDetails() {
       <div className="product-main-content">
         <div className="product-images-section">
           <div className="main-image-box">
-            <img src={imageUrl} alt={product.name} />
+            <img src={selectedImage || imageUrl} alt={product.name} />
           </div>
 
           <div className="thumbnail-row">
-            <img src={imageUrl} alt={`${product.name} mini 1`} />
-            <img src={imageUrl} alt={`${product.name} mini 2`} />
+            {thumbnails.map((thumb, index) => (
+              <img
+                key={index}
+                src={thumb}
+                alt={`${product.name} mini ${index + 1}`}
+                onClick={() => setSelectedImage(thumb)}
+                style={{
+                  cursor: "pointer",
+                  outline: selectedImage === thumb ? "2px solid #333" : "none",
+                  opacity: selectedImage === thumb ? 1 : 0.6,
+                }}
+              />
+            ))}
           </div>
         </div>
 
@@ -91,7 +117,7 @@ export default function ProductDetails() {
             <span className="size-info">Keszlet: {product.stock_quantity} db</span>
           </div>
 
-          <button className="add-to-cart-btn">Kosarba teszem</button>
+          <button className="add-to-cart-btn" onClick={handleAddToCart}>Kosarba teszem</button>
         </div>
       </div>
     </div>

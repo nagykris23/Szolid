@@ -28,6 +28,7 @@ export default function AdminDashboard() {
 
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
+  const [ordersError, setOrdersError] = useState(null);
   const [editOrderId, setEditOrderId] = useState(null);
   const [editOrderStatus, setEditOrderStatus] = useState("");
 
@@ -37,6 +38,10 @@ export default function AdminDashboard() {
   const [showProductModal, setShowProductModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [productForm, setProductForm] = useState(EMPTY_PRODUCT);
+  getAllOrders()
+    .then(setOrders)
+    .catch((err) => { setOrders([]); setOrdersError(err.message || "Nem sikerült betölteni a rendeléseket."); })
+    .finally(() => setOrdersLoading(false));
   const [formError, setFormError] = useState("");
   const [formLoading, setFormLoading] = useState(false);
 
@@ -148,7 +153,6 @@ export default function AdminDashboard() {
           <span className="admin-user-tag">👤 {user.name}</span>
         </div>
 
-
         {tab === "orders" && (
           <div className="admin-section">
             <div className="section-header">
@@ -156,6 +160,8 @@ export default function AdminDashboard() {
             </div>
             {ordersLoading ? (
               <div className="admin-loading-inner">Rendelések betöltése...</div>
+            ) : ordersError ? (
+              <div className="admin-empty" style={{ color: "#ef4444" }}>⚠️ {ordersError}</div>
             ) : orders.length === 0 ? (
               <div className="admin-empty">Nincsenek rendelések.</div>
             ) : (
@@ -192,7 +198,7 @@ export default function AdminDashboard() {
                         </td>
                         <td>
                           <span className={`payment-badge ${o.payment_status}`}>
-                            {o.payment_status === "paid" ? "✓ Fizetve" : o.payment_status === "unpaid" ? "Nem fizetve" : "Visszatérítve"}
+                            {o.payment_status === "paid" ? "✓ Fizetve" : o.payment_status === "paid" ? "Nem fizetve" : "Visszatérítve"}
                           </span>
                         </td>
                         <td>
