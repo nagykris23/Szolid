@@ -99,3 +99,43 @@
 }
 
 .error-message { color: #ef4444; }
+
+
+@media (max-width: 900px) {
+  .parfumok-layout {
+    flex-direction: column;
+    gap: 30px;
+  }
+  .filters-sidebar {
+    width: 100%;
+  }
+  .parfumok-content-wrapper {
+    padding: 20px 16px;
+  }
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .category-header {
+    padding: 40px 0;
+  }
+  .header-inner {
+    padding: 0 16px;
+  }
+  .parfumok-content-wrapper {
+    padding: 16px 12px;
+  }
+  .products-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+}

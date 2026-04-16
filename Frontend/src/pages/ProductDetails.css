@@ -97,3 +97,34 @@
         flex-direction: column;
     }
 }
+
+@media (max-width: 900px) {
+    .product-page-wrapper {
+        margin: 40px auto;
+        padding: 0 16px;
+    }
+
+    .product-main-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .main-image-box img {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-page-wrapper {
+        margin: 24px auto;
+    }
+
+    .thumbnail-row img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .product-info-section h1 {
+        font-size: 24px;
+    }
+}

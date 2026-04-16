@@ -2,6 +2,8 @@
   text-align: center;
   padding: 15px;
   transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 280px;
 }
 
 .product-card:hover {
@@ -60,4 +62,28 @@
 .cart-add-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 5px 15px rgba(138, 182, 142, 0.4);
+}
+
+
+@media (max-width: 768px) {
+  .circle-img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .product-title {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card {
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .circle-img {
+    width: 160px;
+    height: 160px;
+  }
 }

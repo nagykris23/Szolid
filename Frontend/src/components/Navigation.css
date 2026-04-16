@@ -126,3 +126,78 @@
   width: 24px;
   height: 24px;
 }
+
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 200;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+
+@media (max-width: 900px) {
+  .navigation {
+    padding: 18px 24px;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(20, 15, 10, 0.97);
+    backdrop-filter: blur(20px);
+    justify-content: center;
+    align-items: center;
+    z-index: 150;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links a {
+    font-size: 20px;
+    padding: 16px 0;
+    letter-spacing: 2px;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
+
+  .nav-icons {
+    gap: 14px;
+  }
+
+  .login-btn {
+    padding: 8px 14px;
+    font-size: 11px;
+  }
+}
