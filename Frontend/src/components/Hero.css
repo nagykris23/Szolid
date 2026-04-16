@@ -2,7 +2,6 @@
     background-image: url("https://www.oxiessence.eu/!common_design/custom/oxiessence.unas.hu/element/layout_hu_banner_start_big-1920_1_default.png?time=1764673612");
     background-size: cover;
     background-position: center;
-    height: 50px;
     min-height: 700px;
     display: flex;
     flex-direction: column;
@@ -11,9 +10,10 @@
     color: white;
     text-align: center;
     position: relative;
-    width: 100vw;
+    width: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 .hero::before {
@@ -44,7 +44,6 @@
         opacity: 0;
         transform: translateY(30px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -94,12 +93,10 @@
     transform: translateY(-1px);
 }
 
-
 @media (max-width: 1024px) {
     .hero h1 {
         font-size: 56px;
     }
-
     .hero p {
         font-size: 40px;
     }
@@ -109,17 +106,14 @@
     .hero {
         min-height: 500px;
     }
-
     .hero h1 {
         font-size: 36px;
         letter-spacing: 4px;
     }
-
     .hero p {
         font-size: 24px;
         letter-spacing: 2px;
     }
-
     .btn {
         padding: 14px 30px;
         font-size: 13px;
@@ -130,17 +124,14 @@
     .hero {
         min-height: 420px;
     }
-
     .hero h1 {
         font-size: 26px;
         letter-spacing: 3px;
     }
-
     .hero p {
         font-size: 18px;
         letter-spacing: 1px;
     }
-
     .btn {
         padding: 12px 24px;
         font-size: 12px;

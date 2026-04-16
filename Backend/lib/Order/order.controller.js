@@ -68,18 +68,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteOrder = exports.updatePaymentStatus = exports.updateOrderStatus = exports.getMyOrders = exports.createOrder = exports.getOrderById = exports.getAllOrders = void 0;
 var wrapper_1 = __importDefault(require("../wrapper"));
-var mapOrderRow = function (r) { return ({
-    order_id: r.order_id,
-    user_id: r.user_id,
-    user_name: r.user_name,
-    address_id: r.address_id,
-    order_date: r.order_date ? new Date(r.order_date).toISOString() : "",
-    total_amount: r.total_amount,
-    status: r.status,
-    shipping_method: r.shipping_method,
-    payment_method: r.payment_method,
-    payment_status: r.payment_status,
-}); };
 var getAllOrders = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, rows, err_1;
     return __generator(this, function (_b) {
@@ -89,11 +77,11 @@ var getAllOrders = function (_req, res) { return __awaiter(void 0, void 0, void 
                 return [4 /*yield*/, wrapper_1.default.query("\n      SELECT o.*, u.name as user_name \n      FROM ORDERS o\n      JOIN USERS u ON o.user_id = u.user_id\n      ORDER BY o.order_date DESC\n    ")];
             case 1:
                 _a = __read.apply(void 0, [_b.sent(), 1]), rows = _a[0];
-                res.json(rows.map(mapOrderRow));
+                res.json(rows);
                 return [3 /*break*/, 3];
             case 2:
                 err_1 = _b.sent();
-                res.status(500).json({ message: "DB hiba", error: err_1 });
+                res.status(500).send("Adatbázis hiba!");
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -101,42 +89,54 @@ var getAllOrders = function (_req, res) { return __awaiter(void 0, void 0, void 
 }); };
 exports.getAllOrders = getAllOrders;
 var getOrderById = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, _a, orderRows, orderRow, _b, itemRows, items, order, err_2;
+    var id, _a, orderRows, orderRow, order, _b, itemRows, err_2;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
-                _c.trys.push([0, 3, , 4]);
-                id = Number(req.params.id);
-                return [4 /*yield*/, wrapper_1.default.query("\n      SELECT o.*, u.name as user_name \n      FROM ORDERS o\n      JOIN USERS u ON o.user_id = u.user_id\n      WHERE o.order_id = ?\n    ", [id])];
+                id = parseInt(req.params.id);
+                if (isNaN(id)) {
+                    res.status(400).json({ message: "hibásan adtad meg" });
+                    return [2 /*return*/];
+                }
+                _c.label = 1;
             case 1:
+                _c.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, wrapper_1.default.query("\n      SELECT o.*, u.name as user_name \n      FROM ORDERS o\n      JOIN USERS u ON o.user_id = u.user_id\n      WHERE o.order_id = ?\n    ", [id])];
+            case 2:
                 _a = __read.apply(void 0, [_c.sent(), 1]), orderRows = _a[0];
                 orderRow = orderRows[0];
                 if (!orderRow)
                     return [2 /*return*/, res.status(404).json({ message: "Rendelés nem található" })];
+                order = orderRows[0];
                 return [4 /*yield*/, wrapper_1.default.query("\n      SELECT oi.*, p.name \n      FROM ORDER_ITEMS oi\n      JOIN PRODUCTS p ON oi.product_id = p.product_id\n      WHERE oi.order_id = ?\n    ", [id])];
-            case 2:
-                _b = __read.apply(void 0, [_c.sent(), 1]), itemRows = _b[0];
-                items = itemRows.map(function (r) { return ({
-                    product_id: r.product_id,
-                    name: r.name,
-                    quantity: r.quantity,
-                    price_at_purchase: r.price_at_purchase
-                }); });
-                order = mapOrderRow(orderRow);
-                order.items = items;
-                res.json(order);
-                return [3 /*break*/, 4];
             case 3:
+                _b = __read.apply(void 0, [_c.sent(), 1]), itemRows = _b[0];
+                res.json({
+                    order_id: order.order_id,
+                    user_id: order.user_id,
+                    user_name: order.user_name,
+                    address_id: order.address_id,
+                    order_date: order.order_date,
+                    total_amount: order.total_amount,
+                    status: order.status,
+                    shipping_method: order.shipping_method,
+                    payment_method: order.payment_method,
+                    payment_status: order.payment_status,
+                    items: itemRows,
+                });
+                return [3 /*break*/, 5];
+            case 4:
                 err_2 = _c.sent();
-                res.status(500).json({ message: "DB hiba", error: err_2 });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                console.log(err_2);
+                res.status(500).send("Adatbázis hiba!");
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
 exports.getOrderById = getOrderById;
 var createOrder = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var connection, user_id, _a, address_id, total_amount, shipping_method, payment_method, items, _b, orderResult, orderId, items_1, items_1_1, item, e_1_1, err_3;
+    var connection, user_id, _a, address_id, total_amount, shipping_method, payment_method, payment_status, items, _b, orderResult, orderId, items_1, items_1_1, item, e_1_1, err_3;
     var e_1, _c;
     var _d;
     return __generator(this, function (_e) {
@@ -153,11 +153,11 @@ var createOrder = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 user_id = (_d = req.user) === null || _d === void 0 ? void 0 : _d.user_id;
                 if (!user_id)
                     return [2 /*return*/, res.status(401).json({ message: "Bejelentkezés szükséges" })];
-                _a = req.body, address_id = _a.address_id, total_amount = _a.total_amount, shipping_method = _a.shipping_method, payment_method = _a.payment_method, items = _a.items;
+                _a = req.body, address_id = _a.address_id, total_amount = _a.total_amount, shipping_method = _a.shipping_method, payment_method = _a.payment_method, payment_status = _a.payment_status, items = _a.items;
                 if (!items || !Array.isArray(items) || items.length === 0) {
                     return [2 /*return*/, res.status(400).json({ message: "A rendelésnek tartalmaznia kell termékeket" })];
                 }
-                return [4 /*yield*/, connection.query("INSERT INTO ORDERS (user_id, address_id, total_amount, shipping_method, payment_method) VALUES (?, ?, ?, ?, ?)", [user_id, address_id || null, total_amount, shipping_method || null, payment_method || null])];
+                return [4 /*yield*/, connection.query("INSERT INTO ORDERS (user_id, address_id, total_amount, shipping_method, payment_method, payment_status) VALUES (?, ?, ?, ?, ?, ?)", [user_id, address_id || null, total_amount, shipping_method || null, payment_method || null, payment_status || 'unpaid'])];
             case 4:
                 _b = __read.apply(void 0, [_e.sent(), 1]), orderResult = _b[0];
                 orderId = orderResult.insertId;
@@ -220,11 +220,11 @@ var getMyOrders = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 return [4 /*yield*/, wrapper_1.default.query("\n            SELECT o.*, u.name as user_name \n            FROM ORDERS o\n            JOIN USERS u ON o.user_id = u.user_id\n            WHERE o.user_id = ?\n            ORDER BY o.order_date DESC\n        ", [user_id])];
             case 1:
                 _a = __read.apply(void 0, [_c.sent(), 1]), rows = _a[0];
-                res.json(rows.map(mapOrderRow));
+                res.json(rows);
                 return [3 /*break*/, 3];
             case 2:
                 err_4 = _c.sent();
-                res.status(500).json({ message: "DB hiba", error: err_4 });
+                res.status(500).send("Adatbázis hiba!");
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -251,7 +251,7 @@ var updateOrderStatus = function (req, res) { return __awaiter(void 0, void 0, v
                 return [3 /*break*/, 3];
             case 2:
                 err_5 = _b.sent();
-                res.status(500).json({ message: "DB hiba", error: err_5 });
+                res.status(500).send("Adatbázis hiba!");
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -278,7 +278,7 @@ var updatePaymentStatus = function (req, res) { return __awaiter(void 0, void 0,
                 return [3 /*break*/, 3];
             case 2:
                 err_6 = _b.sent();
-                res.status(500).json({ message: "DB hiba", error: err_6 });
+                res.status(500).send("Adatbázis hiba!");
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -304,7 +304,7 @@ var deleteOrder = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 return [3 /*break*/, 4];
             case 3:
                 err_7 = _b.sent();
-                res.status(500).json({ message: "DB hiba", error: err_7 });
+                res.status(500).send("Adatbázis hiba!");
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }

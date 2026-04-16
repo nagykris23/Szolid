@@ -10,11 +10,12 @@ export interface AuthRequest extends Request {
   };
 }
 
-export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Nincs token megadva." });
+    res.status(401).json({ message: "Nincs token megadva." });
+    return;
   }
 
   const token = authHeader.split(" ")[1];
@@ -27,8 +28,9 @@ export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction)
     };
 
     req.user = decoded;
-    next();
+    next(); 
   } catch {
-    return res.status(401).json({ message: "Érvénytelen vagy lejárt token." });
+    res.status(401).json({ message: "Érvénytelen vagy lejárt token." });
+    return;
   }
 };

@@ -57,24 +57,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteCategory = exports.updateCategory = exports.createCategory = exports.getCategoryById = exports.getAllCategories = void 0;
 var wrapper_1 = __importDefault(require("../wrapper"));
-var mapRow = function (r) { return ({
-    category_id: r.category_id,
-    name: r.name,
-}); };
 var getAllCategories = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, rows, err_1;
+    var _a, results, err_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _b.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, wrapper_1.default.query("SELECT * FROM CATEGORIES ORDER BY category_id")];
             case 1:
-                _a = __read.apply(void 0, [_b.sent(), 1]), rows = _a[0];
-                res.json(rows.map(mapRow));
+                _a = __read.apply(void 0, [_b.sent(), 1]), results = _a[0];
+                res.status(200).send(results);
                 return [3 /*break*/, 3];
             case 2:
                 err_1 = _b.sent();
-                res.status(500).json({ message: "DB hiba", error: err_1 });
+                console.log(err_1);
+                res.status(500).send("Adatbázis hiba!");
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -82,108 +79,138 @@ var getAllCategories = function (_req, res) { return __awaiter(void 0, void 0, v
 }); };
 exports.getAllCategories = getAllCategories;
 var getCategoryById = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, _a, rows, row, err_2;
+    var id, _a, results, err_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
-                id = Number(req.params.id);
-                return [4 /*yield*/, wrapper_1.default.query("SELECT * FROM CATEGORIES WHERE category_id = ?", [id])];
+                id = parseInt(req.params.id);
+                if (isNaN(id)) {
+                    res.status(400).send("Hibás paraméter!");
+                    return [2 /*return*/];
+                }
+                _b.label = 1;
             case 1:
-                _a = __read.apply(void 0, [_b.sent(), 1]), rows = _a[0];
-                row = rows[0];
-                if (!row)
-                    return [2 /*return*/, res.status(404).json({ message: "Kategória nem található" })];
-                res.json(mapRow(row));
-                return [3 /*break*/, 3];
+                _b.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, wrapper_1.default.query("SELECT * FROM CATEGORIES WHERE category_id = ?", [id])];
             case 2:
+                _a = __read.apply(void 0, [_b.sent(), 1]), results = _a[0];
+                if (results.length === 0) {
+                    res.status(404).send("Nincs ilyen kategória!");
+                    return [2 /*return*/];
+                }
+                res.status(200).send(results);
+                return [3 /*break*/, 4];
+            case 3:
                 err_2 = _b.sent();
-                res.status(500).json({ message: "DB hiba", error: err_2 });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                console.log(err_2);
+                res.status(500).send("Adatbázis hiba!");
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
 exports.getCategoryById = getCategoryById;
 var createCategory = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var name, _a, result, err_3;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var name, _a, results, err_3;
+    var _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
-                name = req.body.name;
-                if (!name)
-                    return [2 /*return*/, res.status(400).json({ message: "Név megadása kötelező" })];
-                return [4 /*yield*/, wrapper_1.default.query("INSERT INTO CATEGORIES (name) VALUES (?)", [name])];
-            case 1:
-                _a = __read.apply(void 0, [_b.sent(), 1]), result = _a[0];
-                res.status(201).json({ category_id: result.insertId, name: name });
-                return [3 /*break*/, 3];
-            case 2:
-                err_3 = _b.sent();
-                if ((err_3 === null || err_3 === void 0 ? void 0 : err_3.code) === "ER_DUP_ENTRY") {
-                    return [2 /*return*/, res.status(400).json({ message: "Ez a kategória már létezik" })];
+                name = (_b = req.body) === null || _b === void 0 ? void 0 : _b.name;
+                if (!name || name.trim() === "") {
+                    res.status(400).send("Név megadása kötelező!");
+                    return [2 /*return*/];
                 }
-                res.status(500).json({ message: "DB hiba", error: err_3 });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                _c.label = 1;
+            case 1:
+                _c.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, wrapper_1.default.query("INSERT INTO CATEGORIES VALUES (null, ?)", [name])];
+            case 2:
+                _a = __read.apply(void 0, [_c.sent(), 1]), results = _a[0];
+                res.status(200).send(results.insertId);
+                return [3 /*break*/, 4];
+            case 3:
+                err_3 = _c.sent();
+                if ((err_3 === null || err_3 === void 0 ? void 0 : err_3.code) === "ER_DUP_ENTRY") {
+                    return [2 /*return*/, res.status(400).send("Ez a kategória már létezik!")];
+                }
+                res.status(500).send("Adatbázis hiba!");
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
 exports.createCategory = createCategory;
 var updateCategory = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, name, _a, result, err_4;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var id, name, _a, results, err_4;
+    var _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
                 id = Number(req.params.id);
-                name = req.body.name;
-                if (!name)
-                    return [2 /*return*/, res.status(400).json({ message: "Név megadása kötelező" })];
-                return [4 /*yield*/, wrapper_1.default.query("UPDATE CATEGORIES SET name = ? WHERE category_id = ?", [name, id])];
-            case 1:
-                _a = __read.apply(void 0, [_b.sent(), 1]), result = _a[0];
-                if (result.affectedRows === 0) {
-                    return [2 /*return*/, res.status(404).json({ message: "Kategória nem található" })];
+                name = (_b = req.body) === null || _b === void 0 ? void 0 : _b.name;
+                if (isNaN(id)) {
+                    res.status(400).send("Számnak kell lennie!");
+                    return [2 /*return*/];
                 }
-                res.json({ category_id: id, name: name });
-                return [3 /*break*/, 3];
+                if (!name || name.trim() === "") {
+                    res.status(400).send("Nem adott meg adatokat!");
+                    return [2 /*return*/];
+                }
+                _c.label = 1;
+            case 1:
+                _c.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, wrapper_1.default.query("UPDATE CATEGORIES SET name = ? WHERE category_id = ?", [name, id])];
             case 2:
-                err_4 = _b.sent();
+                _a = __read.apply(void 0, [_c.sent(), 1]), results = _a[0];
+                if (results.affectedRows === 0) {
+                    res.status(404).send("Nincs ilyen kategória!");
+                    return [2 /*return*/];
+                }
+                res.status(200).send({ category_id: id, name: name });
+                return [3 /*break*/, 4];
+            case 3:
+                err_4 = _c.sent();
                 if ((err_4 === null || err_4 === void 0 ? void 0 : err_4.code) === "ER_DUP_ENTRY") {
                     return [2 /*return*/, res.status(400).json({ message: "Ez a kategória név már foglalt" })];
                 }
-                res.status(500).json({ message: "DB hiba", error: err_4 });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                res.status(500).send("Adatbázis hiba!");
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
 exports.updateCategory = updateCategory;
 var deleteCategory = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, _a, rows, err_5;
+    var id, _a, results, err_5;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 3, , 4]);
-                id = Number(req.params.id);
-                return [4 /*yield*/, wrapper_1.default.query("SELECT * FROM CATEGORIES WHERE category_id = ?", [id])];
+                id = parseInt(req.params.id);
+                if (isNaN(id)) {
+                    res.status(400).send("Számnak kell lennie!");
+                    return [2 /*return*/];
+                }
+                _b.label = 1;
             case 1:
-                _a = __read.apply(void 0, [_b.sent(), 1]), rows = _a[0];
-                if (!rows[0])
-                    return [2 /*return*/, res.status(404).json({ message: "Kategória nem található" })];
+                _b.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, wrapper_1.default.query("DELETE FROM CATEGORIES WHERE category_id = ?", [id])];
             case 2:
-                _b.sent();
-                res.json({ message: "Kategória törölve" });
+                _a = __read.apply(void 0, [_b.sent(), 1]), results = _a[0];
+                if (results.affectedRows === 0) {
+                    res.status(404).send("Nincs ilyen kategória!");
+                    return [2 /*return*/];
+                }
+                res.status(200).send("Kategória törölve");
                 return [3 /*break*/, 4];
             case 3:
                 err_5 = _b.sent();
+                console.log(err_5);
                 if ((err_5 === null || err_5 === void 0 ? void 0 : err_5.code) === "ER_ROW_IS_REFERENCED_2") {
-                    return [2 /*return*/, res.status(400).json({ message: "A kategória nem törölhető, mert termékek tartoznak hozzá" })];
+                    res.status(400).send("Nem törölhető mert már tartozik hozzá termék");
+                    return [2 /*return*/];
                 }
-                res.status(500).json({ message: "DB hiba", error: err_5 });
+                res.status(500).send("Adatbázis hiba!");
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }

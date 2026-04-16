@@ -55,26 +55,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.patchDataById = exports.putDataById = exports.deleteDataById = exports.postData = exports.getDataById = exports.getAllData = exports.run = void 0;
+exports.patchDataById = exports.putDataById = exports.deleteDataById = exports.postData = exports.getDataById = exports.getAllData = void 0;
 var wrapper_1 = __importDefault(require("../wrapper"));
-var mapRow = function (r) {
-    var _a;
-    return ({
-        product_id: r.product_id,
-        category_id: r.category_id,
-        category_name: r.category_name,
-        name: r.name,
-        description: r.description,
-        price: r.price,
-        stock_quantity: r.stock_quantity,
-        image_url: (_a = r.image_url) !== null && _a !== void 0 ? _a : null,
-        created_at: r.created_at ? new Date(r.created_at).toISOString() : undefined,
-    });
-};
-var run = function (_req, res) {
-    res.json({ status: "ok", message: "Az API fut" });
-};
-exports.run = run;
 var getAllData = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var categoryName, query, params, _a, rows, err_1;
     return __generator(this, function (_b) {
@@ -92,11 +74,11 @@ var getAllData = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [4 /*yield*/, wrapper_1.default.query(query, params)];
             case 1:
                 _a = __read.apply(void 0, [_b.sent(), 1]), rows = _a[0];
-                res.json(rows.map(mapRow));
+                res.json(rows);
                 return [3 /*break*/, 3];
             case 2:
                 err_1 = _b.sent();
-                res.status(500).json({ message: "DB hiba", error: err_1 });
+                res.status(500).send("Adatbázis hiba!");
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -108,22 +90,24 @@ var getDataById = function (req, res) { return __awaiter(void 0, void 0, void 0,
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
-                id = Number(req.params.id);
+                id = parseInt(req.params.id);
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 3, , 4]);
                 query = "\n      SELECT p.*, c.name as category_name \n      FROM PRODUCTS p\n      JOIN CATEGORIES c ON p.category_id = c.category_id\n      WHERE p.product_id = ?\n    ";
                 return [4 /*yield*/, wrapper_1.default.query(query, [id])];
-            case 1:
+            case 2:
                 _a = __read.apply(void 0, [_b.sent(), 1]), rows = _a[0];
                 row = rows[0];
                 if (!row)
                     return [2 /*return*/, res.status(404).json({ message: "Termék nem található" })];
-                res.json(mapRow(row));
-                return [3 /*break*/, 3];
-            case 2:
+                res.json(rows);
+                return [3 /*break*/, 4];
+            case 3:
                 err_2 = _b.sent();
                 res.status(500).json({ message: "DB hiba", error: err_2 });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
@@ -150,14 +134,14 @@ var postData = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
                 return [4 /*yield*/, wrapper_1.default.query("\n      SELECT p.*, c.name as category_name \n      FROM PRODUCTS p\n      JOIN CATEGORIES c ON p.category_id = c.category_id\n      WHERE p.product_id = ?\n    ", [insertId])];
             case 2:
                 _e = __read.apply(void 0, [_g.sent(), 1]), rows = _e[0];
-                res.status(201).json(mapRow(rows[0]));
+                res.status(201).json(rows);
                 return [3 /*break*/, 4];
             case 3:
                 err_3 = _g.sent();
                 if ((err_3 === null || err_3 === void 0 ? void 0 : err_3.code) === "ER_NO_REFERENCED_ROW_2") {
                     return [2 /*return*/, res.status(400).json({ message: "Érvénytelen category_id" })];
                 }
-                res.status(500).json({ message: "DB hiba", error: err_3 });
+                res.status(500).send("Adatbázis hiba!");
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -165,28 +149,31 @@ var postData = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
 }); };
 exports.postData = postData;
 var deleteDataById = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, _a, rowsBefore, row, err_4;
+    var id, _a, rows, row, deletedProduct, err_4;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 3, , 4]);
-                id = Number(req.params.id);
-                return [4 /*yield*/, wrapper_1.default.query("\n      SELECT p.*, c.name as category_name \n      FROM PRODUCTS p\n      JOIN CATEGORIES c ON p.category_id = c.category_id\n      WHERE p.product_id = ?\n    ", [id])];
+                id = parseInt(req.params.id);
+                _b.label = 1;
             case 1:
-                _a = __read.apply(void 0, [_b.sent(), 1]), rowsBefore = _a[0];
-                row = rowsBefore[0];
+                _b.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, wrapper_1.default.query("\n      SELECT p.*, c.name as category_name \n      FROM PRODUCTS p\n      JOIN CATEGORIES c ON p.category_id = c.category_id\n      WHERE p.product_id = ?\n    ", [id])];
+            case 2:
+                _a = __read.apply(void 0, [_b.sent(), 1]), rows = _a[0];
+                row = rows[0];
                 if (!row)
                     return [2 /*return*/, res.status(404).json({ message: "Termék nem található" })];
+                deletedProduct = rows[0];
                 return [4 /*yield*/, wrapper_1.default.query("DELETE FROM PRODUCTS WHERE product_id = ?", [id])];
-            case 2:
-                _b.sent();
-                res.json({ message: "Deleted", deleted: mapRow(row) });
-                return [3 /*break*/, 4];
             case 3:
+                _b.sent();
+                res.json({ message: "Deleted", deleted: deletedProduct });
+                return [3 /*break*/, 5];
+            case 4:
                 err_4 = _b.sent();
-                res.status(500).json({ message: "DB hiba", error: err_4 });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                res.status(500).send("Adatbázis hiba!");
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -213,14 +200,14 @@ var putDataById = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 return [4 /*yield*/, wrapper_1.default.query("\n      SELECT p.*, c.name as category_name \n      FROM PRODUCTS p\n      JOIN CATEGORIES c ON p.category_id = c.category_id\n      WHERE p.product_id = ?\n    ", [id])];
             case 2:
                 _d = __read.apply(void 0, [_f.sent(), 1]), rows = _d[0];
-                res.json(mapRow(rows[0]));
+                res.json(rows);
                 return [3 /*break*/, 4];
             case 3:
                 err_5 = _f.sent();
                 if ((err_5 === null || err_5 === void 0 ? void 0 : err_5.code) === "ER_NO_REFERENCED_ROW_2") {
                     return [2 /*return*/, res.status(400).json({ message: "Érvénytelen category_id" })];
                 }
-                res.status(500).json({ message: "DB hiba", error: err_5 });
+                res.status(500).send("Adatbázis hiba!");
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -281,7 +268,7 @@ var patchDataById = function (req, res) { return __awaiter(void 0, void 0, void 
             case 3: return [4 /*yield*/, wrapper_1.default.query("\n      SELECT p.*, c.name as category_name \n      FROM PRODUCTS p\n      JOIN CATEGORIES c ON p.category_id = c.category_id\n      WHERE p.product_id = ?\n    ", [id])];
             case 4:
                 _c = __read.apply(void 0, [_e.sent(), 1]), rowsAfter = _c[0];
-                res.json(mapRow(rowsAfter[0]));
+                res.json(rowsAfter[0]);
                 return [3 /*break*/, 6];
             case 5:
                 err_6 = _e.sent();

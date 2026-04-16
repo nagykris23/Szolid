@@ -6,4 +6,4 @@ export interface AuthRequest extends Request {
         role: string;
     };
 }
-export declare const requireAuth: (req: AuthRequest, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined;
+export declare const requireAuth: (req: AuthRequest, res: Response, next: NextFunction) => void;

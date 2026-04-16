@@ -9,7 +9,8 @@ var config_1 = require("../config");
 var requireAuth = function (req, res, next) {
     var authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return res.status(401).json({ message: "Nincs token megadva." });
+        res.status(401).json({ message: "Nincs token megadva." });
+        return;
     }
     var token = authHeader.split(" ")[1];
     try {
@@ -18,7 +19,8 @@ var requireAuth = function (req, res, next) {
         next();
     }
     catch (_a) {
-        return res.status(401).json({ message: "Érvénytelen vagy lejárt token." });
+        res.status(401).json({ message: "Érvénytelen vagy lejárt token." });
+        return;
     }
 };
 exports.requireAuth = requireAuth;

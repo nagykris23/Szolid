@@ -1,0 +1,27 @@
+{
+  "newProduct": {
+    "name": "Teszt Parfüm",
+    "description": "Cypress teszt termék",
+    "price": 4990,
+    "stock_quantity": 10,
+    "category_id": 1,
+    "image_url": "teszt.jpg"
+  },
+  "updatedProduct": {
+    "name": "Frissített Parfüm",
+    "description": "Frissített leírás",
+    "price": 5990,
+    "stock_quantity": 5,
+    "category_id": 1,
+    "image_url": "teszt.jpg"
+  },
+  "newUser": {
+    "name": "Teszt Felhasználó",
+    "email": "cypress_new@test.com",
+    "password": "cypress123"
+  },
+  "newCategory": {
+    "name": "cypress_kategoria",
+    "description": "Cypress teszt kategória"
+  }
+}

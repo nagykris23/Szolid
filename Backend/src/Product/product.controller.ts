@@ -1,22 +1,5 @@
 import { Request, Response } from "express";
 import pool from "../wrapper";
-import { Product } from "./product.model";
-
-const mapRow = (r: any): Product => ({
-  product_id: r.product_id,
-  category_id: r.category_id,
-  category_name: r.category_name,
-  name: r.name,
-  description: r.description,
-  price: r.price,
-  stock_quantity: r.stock_quantity,
-  image_url: r.image_url ?? null,
-  created_at: r.created_at ? new Date(r.created_at).toISOString() : undefined,
-});
-
-export const run = (_req: Request, res: Response) => {
-  res.json({ status: "ok", message: "Az API fut" });
-};
 
 export const getAllData = async (req: Request, res: Response) => {
   try {
@@ -36,15 +19,15 @@ export const getAllData = async (req: Request, res: Response) => {
     query += " ORDER BY p.product_id";
     
     const [rows] = await pool.query(query, params);
-    res.json((rows as any[]).map(mapRow));
+    res.json(rows);
   } catch (err) {
-    res.status(500).json({ message: "DB hiba", error: err });
+    res.status(500).send("Adatbázis hiba!");
   }
 };
 
 export const getDataById = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
   try {
-    const id = Number(req.params.id);
     const query = `
       SELECT p.*, c.name as category_name 
       FROM PRODUCTS p
@@ -54,7 +37,7 @@ export const getDataById = async (req: Request, res: Response) => {
     const [rows] = await pool.query(query, [id]);
     const row = (rows as any[])[0];
     if (!row) return res.status(404).json({ message: "Termék nem található" });
-    res.json(mapRow(row));
+    res.json(rows);
   } catch (err) {
     res.status(500).json({ message: "DB hiba", error: err });
   }
@@ -83,31 +66,34 @@ export const postData = async (req: Request, res: Response) => {
       JOIN CATEGORIES c ON p.category_id = c.category_id
       WHERE p.product_id = ?
     `, [insertId]);
-    res.status(201).json(mapRow((rows as any[])[0]));
+    res.status(201).json(rows);
   } catch (err: any) {
     if (err?.code === "ER_NO_REFERENCED_ROW_2") {
       return res.status(400).json({ message: "Érvénytelen category_id" });
     }
-    res.status(500).json({ message: "DB hiba", error: err });
+    res.status(500).send("Adatbázis hiba!");
   }
 };
 
 export const deleteDataById = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+
   try {
-    const id = Number(req.params.id);
-    const [rowsBefore] = await pool.query(`
+    const [rows] = await pool.query(`
       SELECT p.*, c.name as category_name 
       FROM PRODUCTS p
       JOIN CATEGORIES c ON p.category_id = c.category_id
       WHERE p.product_id = ?
     `, [id]);
-    const row = (rowsBefore as any[])[0];
+    const row = (rows as any[])[0];
     if (!row) return res.status(404).json({ message: "Termék nem található" });
 
+    const deletedProduct = (rows as any[])[0];
+
     await pool.query("DELETE FROM PRODUCTS WHERE product_id = ?", [id]);
-    res.json({ message: "Deleted", deleted: mapRow(row) });
+    res.json({ message: "Deleted", deleted:  deletedProduct});
   } catch (err) {
-    res.status(500).json({ message: "DB hiba", error: err });
+    res.status(500).send("Adatbázis hiba!");
   }
 };
 
@@ -134,12 +120,12 @@ export const putDataById = async (req: Request, res: Response) => {
       JOIN CATEGORIES c ON p.category_id = c.category_id
       WHERE p.product_id = ?
     `, [id]);
-    res.json(mapRow((rows as any[])[0]));
+    res.json(rows);
   } catch (err: any) {
     if (err?.code === "ER_NO_REFERENCED_ROW_2") {
       return res.status(400).json({ message: "Érvénytelen category_id" });
     }
-    res.status(500).json({ message: "DB hiba", error: err });
+    res.status(500).send("Adatbázis hiba!");
   }
 };
 
@@ -181,7 +167,7 @@ export const patchDataById = async (req: Request, res: Response) => {
       JOIN CATEGORIES c ON p.category_id = c.category_id
       WHERE p.product_id = ?
     `, [id]);
-    res.json(mapRow((rowsAfter as any[])[0]));
+    res.json((rowsAfter as any[])[0]);
   } catch (err: any) {
     if (err?.code === "ER_NO_REFERENCED_ROW_2") {
       return res.status(400).json({ message: "Érvénytelen category_id" });

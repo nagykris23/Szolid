@@ -28,12 +28,22 @@
   color: red;
 }
 
-@media (max-width: 800px) {
-  .register-grid {
-    grid-template-columns: 1fr;
+
+@media (max-width: 768px) {
+  .register-container {
+    padding: 10px;
   }
 
-  .full {
-    grid-column: span 1;
+  .register-form {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .register-form input {
+    width: 100%;
+  }
+
+  .register-form button {
+    width: 100%;
   }
 }

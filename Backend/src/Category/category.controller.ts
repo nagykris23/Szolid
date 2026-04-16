@@ -1,81 +1,129 @@
 import { Request, Response } from "express";
 import pool from "../wrapper";
-import { Category } from "./category.model";
-
-const mapRow = (r: any): Category => ({
-    category_id: r.category_id,
-    name: r.name,
-});
 
 export const getAllCategories = async (_req: Request, res: Response) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM CATEGORIES ORDER BY category_id");
-        res.json((rows as any[]).map(mapRow));
+        const [results] = await pool.query(
+            "SELECT * FROM CATEGORIES ORDER BY category_id"
+        ) as Array<any>;
+
+        res.status(200).send(results);
     } catch (err) {
-        res.status(500).json({ message: "DB hiba", error: err });
+        console.log(err);
+        res.status(500).send("Adatbázis hiba!");
     }
 };
 
 export const getCategoryById = async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    
+    if (isNaN(id)) {
+        res.status(400).send("Hibás paraméter!");
+        return;
+    }
+    
     try {
-        const id = Number(req.params.id);
-        const [rows] = await pool.query("SELECT * FROM CATEGORIES WHERE category_id = ?", [id]);
-        const row = (rows as any[])[0];
-        if (!row) return res.status(404).json({ message: "Kategória nem található" });
-        res.json(mapRow(row));
+        const [results] = await pool.query(
+            "SELECT * FROM CATEGORIES WHERE category_id = ?",
+            [id]
+        ) as Array<any>;
+
+        if (results.length === 0) {
+            res.status(404).send("Nincs ilyen kategória!");
+            return;
+        }
+
+        res.status(200).send(results);
     } catch (err) {
-        res.status(500).json({ message: "DB hiba", error: err });
+        console.log(err);
+        res.status(500).send("Adatbázis hiba!");
     }
 };
 
 export const createCategory = async (req: Request, res: Response) => {
-    try {
-        const { name } = req.body;
-        if (!name) return res.status(400).json({ message: "Név megadása kötelező" });
+    const name = req.body?.name;
 
-        const [result]: any = await pool.query("INSERT INTO CATEGORIES (name) VALUES (?)", [name]);
-        res.status(201).json({ category_id: result.insertId, name });
+    if (!name || name.trim() === "") {
+        res.status(400).send("Név megadása kötelező!");
+        return;
+    }
+    
+    try {
+        const [results] = await pool.query(
+            "INSERT INTO CATEGORIES VALUES (null, ?)",
+            [name]
+        ) as Array<any>;
+
+        res.status(200).send(results.insertId);
     } catch (err: any) {
         if (err?.code === "ER_DUP_ENTRY") {
-            return res.status(400).json({ message: "Ez a kategória már létezik" });
+            return res.status(400).send("Ez a kategória már létezik!");
         }
-        res.status(500).json({ message: "DB hiba", error: err });
+        res.status(500).send("Adatbázis hiba!");
     }
 };
 
 export const updateCategory = async (req: Request, res: Response) => {
-    try {
-        const id = Number(req.params.id);
-        const { name } = req.body;
-        if (!name) return res.status(400).json({ message: "Név megadása kötelező" });
+    const id = Number(req.params.id);
+    const name = req.body?.name;
 
-        const [result]: any = await pool.query("UPDATE CATEGORIES SET name = ? WHERE category_id = ?", [name, id]);
-        
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "Kategória nem található" });
+    if (isNaN(id)) {
+        res.status(400).send("Számnak kell lennie!");
+        return;
+    }
+
+    if (!name || name.trim() === "") {
+        res.status(400).send("Nem adott meg adatokat!");
+        return;
+    }
+
+    try {
+        const [results] = await pool.query(
+            "UPDATE CATEGORIES SET name = ? WHERE category_id = ?",
+            [name, id]
+        ) as Array<any>;
+
+        if (results.affectedRows === 0) {
+            res.status(404).send("Nincs ilyen kategória!");
+            return;
         }
 
-        res.json({ category_id: id, name });
+        res.status(200).send({ category_id: id, name });
     } catch (err: any) {
         if (err?.code === "ER_DUP_ENTRY") {
             return res.status(400).json({ message: "Ez a kategória név már foglalt" });
         }
-        res.status(500).json({ message: "DB hiba", error: err });
+        res.status(500).send("Adatbázis hiba!");
     }
 };
 
 export const deleteCategory = async (req: Request, res: Response) => {
-    try {
-        const id = Number(req.params.id);
-        const [rows] = await pool.query("SELECT * FROM CATEGORIES WHERE category_id = ?", [id]);
-        if (!(rows as any[])[0]) return res.status(404).json({ message: "Kategória nem található" });
+    const id = parseInt(req.params.id);
 
-        await pool.query("DELETE FROM CATEGORIES WHERE category_id = ?", [id]);
-        res.json({ message: "Kategória törölve" });
-    } catch (err: any) {
-        if (err?.code === "ER_ROW_IS_REFERENCED_2") {
-            return res.status(400).json({ message: "A kategória nem törölhető, mert termékek tartoznak hozzá" });
+    if (isNaN(id)) {
+        res.status(400).send("Számnak kell lennie!");
+        return;
+    }
+    
+    try {
+        const [results] = await pool.query(
+            "DELETE FROM CATEGORIES WHERE category_id = ?",
+            [id]
+        ) as Array<any>;
+
+        if (results.affectedRows === 0) {
+            res.status(404).send("Nincs ilyen kategória!");
+            return;
         }
-        res.status(500).json({ message: "DB hiba", error: err });
+        
+        res.status(200).send("Kategória törölve");
+    } catch (err: any) {
+        console.log(err);
+
+        if (err?.code === "ER_ROW_IS_REFERENCED_2") {
+            res.status(400).send("Nem törölhető mert már tartozik hozzá termék");
+            return;
+        }
+        res.status(500).send("Adatbázis hiba!");
     }
 };
